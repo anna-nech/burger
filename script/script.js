@@ -1,3 +1,8 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+import { push } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+
 document.addEventListener('DOMContentLoaded', function () {
     const btnOpenModal = document.querySelector('#btnOpenModal');
     const modalBlock = document.querySelector('#modalBlock');
@@ -9,79 +14,45 @@ document.addEventListener('DOMContentLoaded', function () {
     const prevButton = document.querySelector('#prev');
     const sendButton = document.querySelector('#send');
 
-    const questions = [{
-        question: "Какого цвета бургер?",
-        answers: [{
-                title: 'Стандарт',
-                url: './image/burger.png'
-            },
-            {
-                title: 'Тёмный',
-                url: './image/burgerBlack.png'
-            }
-        ],
-        type: 'radio'
-    },
-    {
-        question: "Из какого мяса котлета?",
-        answers: [{
-                title: 'Курица',
-                url: './image/chickenMeat.png'
-            },
-            {
-                title: 'Говядина',
-                url: './image/beefMeat.png'
-            },
-            {
-                title: 'Свинина',
-                url: './image/porkMeat.png'
-            }
-        ],
-        type: 'radio'
-    },
-    {
-        question: "Дополнительные ингредиенты?",
-        answers: [{
-                title: 'Помидор',
-                url: './image/tomato.png'
-            },
-            {
-                title: 'Огурец',
-                url: './image/cucumber.png'
-            },
-            {
-                title: 'Салат',
-                url: './image/salad.png'
-            },
-            {
-                title: 'Лук',
-                url: './image/onion.png'
-            }
-        ],
-        type: 'checkbox'
-    },
-    {
-        question: "Добавить соус?",
-        answers: [{
-                title: 'Чесночный',
-                url: './image/sauce1.png'
-            },
-            {
-                title: 'Томатный',
-                url: './image/sauce2.png'
-            },
-            {
-                title: 'Горчичный',
-                url: './image/sauce3.png'
-            }
-        ],
-        type: 'radio'
+    const firebaseConfig = {
+    apiKey: "AIzaSyBp338kEDn3Ro6r75FteHVb_UTGh1fc0Bk",
+    authDomain: "burger-6214a.firebaseapp.com",
+    databaseURL: "https://burger-6214a-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "burger-6214a",
+    storageBucket: "burger-6214a.firebasestorage.app",
+    messagingSenderId: "92624207996",
+    appId: "1:92624207996:web:34cd33847c036c554209f9",
+    measurementId: "G-GJ1D834HQ3"
+    };
+    
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getDatabase(app);
+    const questionsRef = ref(db, 'questions');
+
+    const getData = () => {
+        formAnswers.textContent = 'LOAD';
+
+        setTimeout(() => {
+            get(questionsRef)
+                .then(snapshot => {
+                    if (snapshot.exists()) {
+                        playTest(snapshot.val());
+                    } else {
+                        formAnswers.textContent = 'Нет данных по вопросам';
+                    }
+                })
+                .catch(error => {
+                    formAnswers.textContent = 'Ошибка при получении данных!';
+                    console.error(error);
+                });
+        }, 1000);
     }
-];
+
 
     btnOpenModal.addEventListener('click', () => {
         modalBlock.classList.add('d-block');
-        playTest();
+        getData();
     });
 
     
@@ -89,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
         modalBlock.classList.remove('d-block');
     });
 
-    const playTest = () => {
+    const playTest = (questions) => {
         
         const finalAnswers = [];
         let numberQuestion = 0;
@@ -195,7 +166,11 @@ document.addEventListener('DOMContentLoaded', function () {
             checkAnswer();
             numberQuestion++;
             renderQuestions(numberQuestion);
-            console.log(finalAnswers);
+
+            const contactsRef = ref(db, 'contacts');
+            push(contactsRef, finalAnswers)
+                .then(() => console.log('Данные отправлены:', finalAnswers))
+                .catch(err => console.error('Ошибка отправки:', err));
         }
     };
 });
