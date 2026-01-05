@@ -15,14 +15,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const sendButton = document.querySelector('#send');
 
     const firebaseConfig = {
-    apiKey: "AIzaSyBp338kEDn3Ro6r75FteHVb_UTGh1fc0Bk",
-    authDomain: "burger-6214a.firebaseapp.com",
-    databaseURL: "https://burger-6214a-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "burger-6214a",
-    storageBucket: "burger-6214a.firebasestorage.app",
-    messagingSenderId: "92624207996",
-    appId: "1:92624207996:web:34cd33847c036c554209f9",
-    measurementId: "G-GJ1D834HQ3"
+    apiKey: "AIzaSyAotnw9wd4SZRUZGC5wMCgZZrmZyvkJ_TM",
+    authDomain: "burger-63a0d.firebaseapp.com",
+    databaseURL: "https://burger-63a0d-default-rtdb.firebaseio.com",
+    projectId: "burger-63a0d",
+    storageBucket: "burger-63a0d.firebasestorage.app",
+    messagingSenderId: "700181742470",
+    appId: "1:700181742470:web:1604f87987dc25b4dca207",
+    measurementId: "G-KJNXWVF6YH"
     };
     
     const app = initializeApp(firebaseConfig);
@@ -174,5 +174,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 });
+
 
 
